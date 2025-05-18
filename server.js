@@ -7,7 +7,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const subscriberRoutes = require("./routes/subscriberRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
-const customerRoutes = require("./routes/customerRoutes");
+const customerRoutes = require("./routes/customerRoutes"); // ✅ Added line
 
 const connectDB = require("./db");
 
@@ -17,12 +17,20 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 4000;
 
+// ✅ CORS configuration to allow Vercel frontend
+const allowedOrigins = [
+  "http://localhost:3000", // for development
+  "https://customer-lilac-ten.vercel.app" // for Vercel deployment
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 // middleware
-const corsOptions = {
-  origin: "https://consultancy-project-vmj1.vercel.app",
-  credentials: true,
-};
-app.use(cors(corsOptions));
 app.use(express.json());
 
 // api endpoints
@@ -33,12 +41,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/subscribers", subscriberRoutes);
 app.use("/api/feedback", feedbackRoutes);
-app.use("/api/customers", customerRoutes);
-
-// test route for Render to verify server is running
-app.get("/", (req, res) => {
-  res.send("API is running successfully! 🚀");
-});
+app.use("/api/customers", customerRoutes); // ✅ Added line
 
 // error handling middleware
 app.use((err, req, res, next) => {
@@ -53,7 +56,6 @@ app.use((err, req, res, next) => {
 // connect to db
 connectDB();
 
-// start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  //console.log(`server is listening at port ${port}.`);
 });
