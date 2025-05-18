@@ -33,6 +33,11 @@ app.use(cors({
 // middleware
 app.use(express.json());
 
+// ✅ Root route to avoid "Cannot GET /" on Render
+app.get("/", (req, res) => {
+  res.send("🚀 Backend API is running successfully!");
+});
+
 // api endpoints
 app.use("/images", express.static("upload/images"));
 app.use("/api/products", productRoutes);
@@ -57,5 +62,5 @@ app.use((err, req, res, next) => {
 connectDB();
 
 app.listen(port, () => {
-  //console.log(`server is listening at port ${port}.`);
+  // console.log(`server is listening at port ${port}.`);
 });
