@@ -7,7 +7,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const subscriberRoutes = require("./routes/subscriberRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
-const customerRoutes = require("./routes/customerRoutes"); // ✅ Added line
+const customerRoutes = require("./routes/customerRoutes");
 
 const connectDB = require("./db");
 
@@ -18,8 +18,12 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // middleware
+const corsOptions = {
+  origin: "https://consultancy-project-vmj1.vercel.app",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 
 // api endpoints
 app.use("/images", express.static("upload/images"));
@@ -29,9 +33,9 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/subscribers", subscriberRoutes);
 app.use("/api/feedback", feedbackRoutes);
-app.use("/api/customers", customerRoutes); // ✅ Added line
+app.use("/api/customers", customerRoutes);
 
-// ✅ Root route for testing Render deployment
+// test route for Render to verify server is running
 app.get("/", (req, res) => {
   res.send("API is running successfully! 🚀");
 });
@@ -49,6 +53,7 @@ app.use((err, req, res, next) => {
 // connect to db
 connectDB();
 
+// start server
 app.listen(port, () => {
-  console.log(`Server is listening at port ${port}`);
+  console.log(`Example app listening on port ${port}`);
 });
